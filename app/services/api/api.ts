@@ -14,7 +14,12 @@ import Config from "../../config"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem" // @demo remove-current-line
 import type {
   ApiConfig,
-  ApiFeedResponse, // @demo remove-current-line
+  ApiFeedResponse,
+  GetMessagesResult,
+  GetRoomResult,
+  GetRoomsResult,
+  Message,
+  Room, // @demo remove-current-line
 } from "./api.types"
 import type { EpisodeSnapshotIn } from "../../models/Episode" // @demo remove-current-line
 
@@ -81,6 +86,107 @@ export class Api {
       return { kind: "bad-data" }
     }
   }
+
+  async getRooms(): Promise<GetRoomsResult> {
+    // make the api call
+    const response: ApiResponse<Room[]> = await this.apisauce.get("/Room")
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rooms = response.data
+      return { kind: "ok", rooms }
+    } catch (e) {
+      __DEV__ && console.tron.log(e.message)
+      return { kind: "bad-data" }
+    }
+  }
+
+  async getRoom(id: string): Promise<GetRoomResult> {
+    // make the api call
+    const response: ApiResponse<any> = await this.apisauce.get(`/Room/${id}`)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const room = response.data
+      return { kind: "ok", room }
+    } catch (e) {
+      __DEV__ && console.tron.log(e.message)
+      return { kind: "bad-data" }
+    }
+  }
+
+  async addRoom(room: Room): Promise<GetRoomsResult> {
+    // make the api call
+    const response: ApiResponse<any> = await this.apisauce.post("/Room", room)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rooms = response.data.results
+      return { kind: "ok", rooms }
+    } catch (e) {
+      __DEV__ && console.tron.log(e.message)
+      return { kind: "bad-data" }
+    }
+  }
+
+  async getMessages(roomId: string): Promise<GetMessagesResult> {
+    // make the api call
+    const response: ApiResponse<Message[]> = await this.apisauce.get(`/Room/${roomId}/Message`)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const messages = response.data
+      return { kind: "ok", messages }
+    } catch (e) {
+      __DEV__ && console.tron.log(e.message)
+      return { kind: "bad-data" }
+    }
+  }
+
+  async addMessage(message: Omit<Message, 'id'>, roomId: string): Promise<GetMessagesResult> {
+    // make the api call
+    const response: ApiResponse<Message[]> = await this.apisauce.post(`/Room/${roomId}/Message`, message)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const messages = response.data
+      return { kind: "ok", messages }
+    } catch (e) {
+      __DEV__ && console.tron.log(e.message)
+      return { kind: "bad-data" }
+    }
+  }
+
   // @demo remove-block-end
 }
 

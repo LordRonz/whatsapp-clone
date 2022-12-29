@@ -1,3 +1,5 @@
+import { GeneralApiProblem } from "./apiProblem"
+
 /**
  * These types indicate the shape of the data you expect to receive from your
  * API endpoint, assuming it's a JSON object like we have.
@@ -34,6 +36,22 @@ export interface ApiFeedResponse {
   items: EpisodeItem[]
 }
 
+export interface Room {
+  id:        string;
+  createdAt: string;
+  name:      string;
+  image:     string;
+}
+
+export interface Message {
+  id:        string;
+  RoomId:    string;
+  createdAt: string;
+  name:      string;
+  avatar:    string;
+  message:   string;
+}
+
 /**
  * The options used to configure apisauce.
  */
@@ -48,3 +66,8 @@ export interface ApiConfig {
    */
   timeout: number
 }
+
+export type GetRoomsResult = { kind: "ok"; rooms: Room[] } | GeneralApiProblem;
+export type GetRoomResult = { kind: "ok"; room: Room } | GeneralApiProblem
+export type GetMessagesResult = { kind: "ok"; messages: Message[] } | GeneralApiProblem
+export type GetMessageResult = { kind: "ok"; message: Message } | GeneralApiProblem
