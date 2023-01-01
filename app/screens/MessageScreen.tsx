@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import { Button, ListItem, Screen, TextField } from "../components"
+import { Button, Header, ListItem, Screen, TextField } from "../components"
 import { Message, useStores } from "../models"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
@@ -51,7 +51,13 @@ export const MessageScreen: FC<StackScreenProps<AppStackScreenProps, "Message">>
     }
 
     return (
-      <Screen style={$root} preset="scroll" safeAreaEdges={["top"]}>
+      <Screen
+        style={$root}
+        preset="scroll"
+        safeAreaEdges={["top"]}
+        ScrollViewProps={{ stickyHeaderIndices: [0] }}
+      >
+        <Header title={route.params.roomName} safeAreaEdges={[]} />
         {messageStore.messages.map(({ name, message }, i) => (
           <ListItem key={`${name}-${i}`}>{message}</ListItem>
         ))}

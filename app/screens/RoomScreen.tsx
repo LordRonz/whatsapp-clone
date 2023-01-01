@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { StyleProp, ViewStyle } from "react-native"
+import { StyleProp, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import { Button, ListItem, Screen, TextField } from "../components"
+import { Button, Header, ListItem, Screen, TextField } from "../components"
 import { MaterialIcons } from "@expo/vector-icons"
 import { Room, useStores } from "../models"
 import { colors } from "../theme"
@@ -22,6 +22,17 @@ const AddRoomButtonStyle: StyleProp<ViewStyle> = {
 
 const AddRoomButtonPressedStyle: StyleProp<ViewStyle> = {
   backgroundColor: colors.palette.whatsappgreen300,
+}
+
+const Wrapper: StyleProp<ViewStyle> = {
+  flex: 1,
+}
+
+const AddRoomWrapper: StyleProp<ViewStyle> = {
+  position: "absolute",
+  bottom: 15,
+  right: 15,
+  alignSelf: "flex-end",
 }
 
 // STOP! READ ME FIRST!
@@ -71,37 +82,48 @@ export const RoomScreen: FC<StackScreenProps<AppStackScreenProps, "Room">> = obs
     }
 
     return (
-      <Screen style={$root} preset="scroll" safeAreaEdges={["top"]}>
-        {roomStore.rooms.map(({ name, id }, i) => (
-          <ListItem
-            key={`${name}-${i}`}
-            onPress={() => {
-              /* 1. Navigate to the Details route with params */
-              navigation.push("Message", {
-                roomId: id,
-              })
-            }}
-          >
-            {name}
-          </ListItem>
-        ))}
-        <Button
-          style={AddRoomButtonStyle}
-          pressedStyle={AddRoomButtonPressedStyle}
-          onPress={() => toggleOverlay()}
+      <View style={Wrapper}>
+        <Screen
+          style={$root}
+          preset="scroll"
+          safeAreaEdges={["top"]}
+          ScrollViewProps={{ stickyHeaderIndices: [0] }}
         >
-          <MaterialIcons name="chat" size={22} color="white" />
-        </Button>
-        <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
-          <TextField
-            label="Room Name"
-            placeholder="Enter room name"
-            value={input}
-            onChangeText={(value) => setInput(value)}
-          />
-          <Button onPress={() => submitRoom()}>Submit</Button>
-        </Overlay>
-      </Screen>
+          <Header title="WhatsApp" safeAreaEdges={[]} />
+          {roomStore.rooms.map(({ name, id }, i) => (
+            <ListItem
+              key={`${name}-${i}`}
+              onPress={() => {
+                /* 1. Navigate to the Details route with params */
+                navigation.push("Message", {
+                  roomId: id,
+                  roomName: name,
+                })
+              }}
+            >
+              {name}
+            </ListItem>
+          ))}
+          <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
+            <TextField
+              label="Room Name"
+              placeholder="Enter room name"
+              value={input}
+              onChangeText={(value) => setInput(value)}
+            />
+            <Button onPress={() => submitRoom()}>Submit</Button>
+          </Overlay>
+        </Screen>
+        <View style={AddRoomWrapper}>
+          <Button
+            style={AddRoomButtonStyle}
+            pressedStyle={AddRoomButtonPressedStyle}
+            onPress={() => toggleOverlay()}
+          >
+            <MaterialIcons name="chat" size={22} color="white" />
+          </Button>
+        </View>
+      </View>
     )
   },
 )
