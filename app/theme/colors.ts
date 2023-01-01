@@ -33,6 +33,9 @@ const palette = {
   angry100: "#F2D6CD",
   angry500: "#C03403",
 
+  whatsappgreen300: "#25d366",
+  whatsappgreen500: "#128c7e",
+
   overlay20: "rgba(25, 16, 21, 0.2)",
   overlay50: "rgba(25, 16, 21, 0.5)",
 }

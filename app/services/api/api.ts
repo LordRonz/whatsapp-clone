@@ -15,6 +15,7 @@ import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem" // @demo 
 import type {
   ApiConfig,
   ApiFeedResponse,
+  GetMessageResult,
   GetMessagesResult,
   GetRoomResult,
   GetRoomsResult,
@@ -109,7 +110,7 @@ export class Api {
 
   async getRoom(id: string): Promise<GetRoomResult> {
     // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(`/Room/${id}`)
+    const response: ApiResponse<Room> = await this.apisauce.get(`/Room/${id}`)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -127,9 +128,9 @@ export class Api {
     }
   }
 
-  async addRoom(room: Room): Promise<GetRoomsResult> {
+  async addRoom(room: Omit<Room, "createdAt" | "id">): Promise<GetRoomResult> {
     // make the api call
-    const response: ApiResponse<any> = await this.apisauce.post("/Room", room)
+    const response: ApiResponse<Room> = await this.apisauce.post("/Room", room)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -139,8 +140,8 @@ export class Api {
 
     // transform the data into the format we are expecting
     try {
-      const rooms = response.data.results
-      return { kind: "ok", rooms }
+      const room = response.data
+      return { kind: "ok", room }
     } catch (e) {
       __DEV__ && console.tron.log(e.message)
       return { kind: "bad-data" }
@@ -167,9 +168,12 @@ export class Api {
     }
   }
 
-  async addMessage(message: Omit<Message, 'id'>, roomId: string): Promise<GetMessagesResult> {
+  async addMessage(message: Omit<Message, "id" | "createdAt" | "roomId">, roomId: string): Promise<GetMessageResult> {
     // make the api call
-    const response: ApiResponse<Message[]> = await this.apisauce.post(`/Room/${roomId}/Message`, message)
+    const response: ApiResponse<Message> = await this.apisauce.post(
+      `/Room/${roomId}/Message`,
+      message,
+    )
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -179,8 +183,8 @@ export class Api {
 
     // transform the data into the format we are expecting
     try {
-      const messages = response.data
-      return { kind: "ok", messages }
+      const message = response.data
+      return { kind: "ok", message }
     } catch (e) {
       __DEV__ && console.tron.log(e.message)
       return { kind: "bad-data" }

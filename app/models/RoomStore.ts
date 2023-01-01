@@ -1,5 +1,5 @@
 import { flow, Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
-import { api, GetRoomsResult } from "../services/api"
+import { api, GetRoomResult, GetRoomsResult } from "../services/api"
 import { withSetPropAction } from "./helpers/withSetPropAction"
 import { Room, RoomModel, RoomSnapshotIn } from "./Room"
 
@@ -23,6 +23,15 @@ export const RoomStoreModel = types
 
       if (result.kind === "ok") {
         self.saveRooms(result.rooms)
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+      }
+    }),
+    addRoom: flow(function* (room: Omit<Room, "createdAt" | "id">) {
+      const result: GetRoomResult = yield api.addRoom(room)
+
+      if (result.kind === "ok") {
+        self.rooms.push(result.room);
       } else {
         __DEV__ && console.tron.log(result.kind)
       }

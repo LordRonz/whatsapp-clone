@@ -1,5 +1,5 @@
 import { flow, Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
-import { GetMessagesResult, api } from "../services/api"
+import { GetMessagesResult, api, GetMessageResult } from "../services/api"
 import { withSetPropAction } from "./helpers/withSetPropAction"
 import { Message, MessageModel, MessageSnapshotIn } from "./Message"
 
@@ -25,6 +25,16 @@ export const MessageStoreModel = types
 
       if (result.kind === "ok") {
         self.saveMessages(result.messages)
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+      }
+    }),
+
+    sendMessage: flow(function* (message: Omit<Message, "id" | "createdAt" | "roomId">, roomId: string) {
+      const result: GetMessageResult = yield api.addMessage(message, roomId)
+
+      if (result.kind === "ok") {
+        self.messages.push(result.message)
       } else {
         __DEV__ && console.tron.log(result.kind)
       }
