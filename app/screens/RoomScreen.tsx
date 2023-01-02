@@ -18,6 +18,11 @@ const AddRoomButtonStyle: StyleProp<ViewStyle> = {
   padding: 0,
   backgroundColor: colors.palette.whatsappgreen500,
   borderWidth: 0,
+  paddingHorizontal: 0,
+  paddingVertical: 0,
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center'
 }
 
 const AddRoomButtonPressedStyle: StyleProp<ViewStyle> = {

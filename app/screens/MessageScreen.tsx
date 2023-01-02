@@ -1,12 +1,42 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle } from "react-native"
+import { StyleProp, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
+import { MaterialIcons } from "@expo/vector-icons"
 import { Button, Header, ListItem, Screen, TextField } from "../components"
 import { Message, useStores } from "../models"
+import { colors } from "../theme"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
+
+const MessageWrapper: StyleProp<ViewStyle> = {
+  flex: 1,
+  flexDirection: "row",
+}
+
+const SendMessageButtonStyle: StyleProp<ViewStyle> = {
+  borderRadius: 9999,
+  width: 40,
+  height: 40,
+  maxWidth: 40,
+  minHeight: 0,
+  backgroundColor: colors.palette.whatsappgreen500,
+  borderWidth: 0,
+  justifyContent: 'center',
+  alignItems: 'center',
+  paddingHorizontal: 0,
+  paddingVertical: 0,
+}
+
+const SendMessageButtonPressedStyle: StyleProp<ViewStyle> = {
+  backgroundColor: colors.palette.whatsappgreen300,
+}
+
+const MessageFieldStyle: StyleProp<ViewStyle> = {
+  borderRadius: 100,
+  flex: 1,
+}
 
 // STOP! READ ME FIRST!
 // To fix the TS error below, you'll need to add the following things in your navigation config:
@@ -66,12 +96,21 @@ export const MessageScreen: FC<StackScreenProps<AppStackScreenProps, "Message">>
           value={name}
           onChangeText={(value) => setName(value)}
         />
-        <TextField
-          placeholder="Message"
-          value={message}
-          onChangeText={(value) => setMessage(value)}
-        />
-        <Button onPress={() => sendMessage()}>Send</Button>
+        <View style={MessageWrapper}>
+          <TextField
+            placeholder="Message"
+            value={message}
+            onChangeText={(value) => setMessage(value)}
+            containerStyle={MessageFieldStyle}
+          />
+          <Button
+            style={SendMessageButtonStyle}
+            pressedStyle={SendMessageButtonPressedStyle}
+            onPress={() => sendMessage()}
+          >
+            <MaterialIcons name="send" size={15} color="white" />
+          </Button>
+        </View>
       </Screen>
     )
   },
