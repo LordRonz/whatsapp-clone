@@ -1,15 +1,13 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { StyleProp, View, ViewStyle } from "react-native"
+import { StyleProp, Text, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
 import { Button, Header, ListItem, Screen, TextField } from "../components"
-import { MaterialIcons } from "@expo/vector-icons"
+import { AntDesign, MaterialIcons } from "@expo/vector-icons"
 import { Room, useStores } from "../models"
 import { colors } from "../theme"
 import { Overlay } from "@rneui/themed"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../models"
 
 const AddRoomButtonStyle: StyleProp<ViewStyle> = {
   borderRadius: 9999,
@@ -21,8 +19,8 @@ const AddRoomButtonStyle: StyleProp<ViewStyle> = {
   paddingHorizontal: 0,
   paddingVertical: 0,
   flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center'
+  justifyContent: "center",
+  alignItems: "center",
 }
 
 const AddRoomButtonPressedStyle: StyleProp<ViewStyle> = {
@@ -38,6 +36,13 @@ const AddRoomWrapper: StyleProp<ViewStyle> = {
   bottom: 15,
   right: 15,
   alignSelf: "flex-end",
+}
+
+const RoomListWrapper: StyleProp<ViewStyle> = {
+  flex: 1,
+  justifyContent: "center",
+  alignItems: "center",
+  flexDirection: "row",
 }
 
 // STOP! READ ME FIRST!
@@ -106,7 +111,10 @@ export const RoomScreen: FC<StackScreenProps<AppStackScreenProps, "Room">> = obs
                 })
               }}
             >
-              {name}
+              <View style={RoomListWrapper}>
+                <AntDesign name="user" size={30} color="black" />
+                <Text>{name}</Text>
+              </View>
             </ListItem>
           ))}
           <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>

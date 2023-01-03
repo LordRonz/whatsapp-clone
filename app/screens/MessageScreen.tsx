@@ -15,6 +15,10 @@ const MessageWrapper: StyleProp<ViewStyle> = {
   flexDirection: "row",
 }
 
+const Wrapper: StyleProp<ViewStyle> = {
+  flex: 1,
+}
+
 const SendMessageButtonStyle: StyleProp<ViewStyle> = {
   borderRadius: 9999,
   width: 40,
@@ -23,8 +27,8 @@ const SendMessageButtonStyle: StyleProp<ViewStyle> = {
   minHeight: 0,
   backgroundColor: colors.palette.whatsappgreen500,
   borderWidth: 0,
-  justifyContent: 'center',
-  alignItems: 'center',
+  justifyContent: "center",
+  alignItems: "center",
   paddingHorizontal: 0,
   paddingVertical: 0,
 }
@@ -36,6 +40,15 @@ const SendMessageButtonPressedStyle: StyleProp<ViewStyle> = {
 const MessageFieldStyle: StyleProp<ViewStyle> = {
   borderRadius: 100,
   flex: 1,
+  marginRight: 8,
+}
+
+const InputWrapper: StyleProp<ViewStyle> = {
+  position: "absolute",
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: "#fff",
 }
 
 // STOP! READ ME FIRST!
@@ -81,37 +94,41 @@ export const MessageScreen: FC<StackScreenProps<AppStackScreenProps, "Message">>
     }
 
     return (
-      <Screen
-        style={$root}
-        preset="scroll"
-        safeAreaEdges={["top"]}
-        ScrollViewProps={{ stickyHeaderIndices: [0] }}
-      >
-        <Header title={route.params.roomName} safeAreaEdges={[]} />
-        {messageStore.messages.map(({ name, message }, i) => (
-          <ListItem key={`${name}-${i}`}>{message}</ListItem>
-        ))}
-        <TextField
-          placeholder="Enter your name"
-          value={name}
-          onChangeText={(value) => setName(value)}
-        />
-        <View style={MessageWrapper}>
+      <View style={Wrapper}>
+        <Screen
+          style={$root}
+          preset="scroll"
+          safeAreaEdges={["top"]}
+          ScrollViewProps={{ stickyHeaderIndices: [0] }}
+        >
+          <Header title={route.params.roomName} safeAreaEdges={[]} />
+          {messageStore.messages.map(({ name, message }, i) => (
+            <ListItem key={`${name}-${i}`}>{message}</ListItem>
+          ))}
+        </Screen>
+        <View style={InputWrapper}>
           <TextField
-            placeholder="Message"
-            value={message}
-            onChangeText={(value) => setMessage(value)}
-            containerStyle={MessageFieldStyle}
+            placeholder="Enter your name"
+            value={name}
+            onChangeText={(value) => setName(value)}
           />
-          <Button
-            style={SendMessageButtonStyle}
-            pressedStyle={SendMessageButtonPressedStyle}
-            onPress={() => sendMessage()}
-          >
-            <MaterialIcons name="send" size={15} color="white" />
-          </Button>
+          <View style={MessageWrapper}>
+            <TextField
+              placeholder="Message"
+              value={message}
+              onChangeText={(value) => setMessage(value)}
+              containerStyle={MessageFieldStyle}
+            />
+            <Button
+              style={SendMessageButtonStyle}
+              pressedStyle={SendMessageButtonPressedStyle}
+              onPress={() => sendMessage()}
+            >
+              <MaterialIcons name="send" size={15} color="white" />
+            </Button>
+          </View>
         </View>
-      </Screen>
+      </View>
     )
   },
 )
